@@ -42,12 +42,27 @@ class OrderOut(BaseModel):
     created_at: datetime
     class Config: from_attributes = True
 
-class TradeOut(BaseModel):
+# class TradeOut(BaseModel):
+#     id: int
+#     buy_order_id: int
+#     sell_order_id: int
+#     user_id: int
+#     price: float
+#     quantity: float
+#     created_at: datetime
+#     class Config: from_attributes = True
+
+
+class TradeOutExtended(BaseModel):
     id: int
-    buy_order_id: int
-    sell_order_id: int
-    user_id: int
     price: float
     quantity: float
     created_at: datetime
-    class Config: from_attributes = True
+
+    buy_order_id: int
+    sell_order_id: int
+    buyer_username: Optional[str]
+    seller_username: Optional[str]
+
+    class Config:
+        orm_mode = True

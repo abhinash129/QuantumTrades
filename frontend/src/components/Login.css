@@ -1,0 +1,101 @@
+/* Centered login container */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Card styling */
+.card {
+  background: rgba(255, 255, 255, 0.97);
+  padding: 40px 30px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  width: 380px;
+  text-align: center;
+  animation: fadeIn 0.8s ease-in-out;
+}
+
+/* Headings */
+.card h2 {
+  margin-bottom: 25px;
+  font-size: 24px;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+/* Input fields */
+.card input {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  outline: none;
+  font-size: 15px;
+  transition: border 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card input:focus {
+  border: 1px solid #2a5298;
+  box-shadow: 0 0 6px rgba(42, 82, 152, 0.4);
+}
+
+/* Highlight error input */
+.card input.error-input {
+  border: 1px solid #e74c3c !important;
+  background: #ffecec;
+}
+
+/* Error message */
+.error {
+  color: #e74c3c;
+  font-size: 14px;
+  margin-top: 6px;
+  text-align: left;
+  padding-left: 4px;
+}
+
+/* Buttons */
+.card button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 15px;
+  border: none;
+  border-radius: 8px;
+  background: #2a5298;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.card button:hover {
+  background: #1e3c72;
+  transform: scale(1.03);
+}
+
+/* Toggle link */
+.card .link {
+  margin-top: 12px;
+  background: transparent;
+  border: none;
+  color: #2a5298;
+  font-size: 14px;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.card .link:hover {
+  color: #1e3c72;
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}

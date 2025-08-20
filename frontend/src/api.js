@@ -19,3 +19,11 @@ export function wsUrl(path="/ws") {
   const base = API_BASE.replace(/^http/, "ws");
   return `${base}${path}`;
 }
+ // ⬇️ add at bottom (or export alongside your other API helpers)
+export function getOpenOrders() {
+  return api("/orders?status=open"); // adjust if your backend uses another path
+}
+
+export function cancelOrder(orderId) {
+  return api(`/orders/${orderId}`, { method: "DELETE" }); // adjust if backend differs
+}
