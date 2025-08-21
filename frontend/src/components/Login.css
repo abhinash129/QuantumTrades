@@ -11,7 +11,7 @@
 /* Card styling */
 .card {
   background: rgba(255, 255, 255, 0.97);
-  padding: 40px 30px;
+  padding: 50px 50px;
   border-radius: 12px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
   width: 380px;
@@ -28,8 +28,10 @@
 }
 
 /* Input fields */
+/* Input fields */
 .card input {
   width: 100%;
+  box-sizing: border-box;   /* ensures padding/border are included in width */
   padding: 12px;
   margin: 10px 0;
   border: 1px solid #ddd;
@@ -43,6 +45,7 @@
   border: 1px solid #2a5298;
   box-shadow: 0 0 6px rgba(42, 82, 152, 0.4);
 }
+
 
 /* Highlight error input */
 .card input.error-input {
