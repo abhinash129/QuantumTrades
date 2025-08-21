@@ -365,16 +365,64 @@ def list_trades(db: Session = Depends(get_db), user: User = Depends(get_current_
         )
     return results
 
+# # -------- WEBSOCKET ----------
+# @app.websocket("/ws")
+# async def websocket_endpoint(ws: WebSocket):
+#     await manager.connect(ws)
+#     try:
+#         await ws.send_json({"type":"hello","msg":"connected"})
+#         while True:
+#             await ws.receive_text()  # keep the socket active; frontend doesn't need to send anything
+#     except Exception:
+#         manager.disconnect(ws)
+
 # -------- WEBSOCKET ----------
 @app.websocket("/ws")
-async def websocket_endpoint(ws: WebSocket):
+async def websocket_endpoint(ws: WebSocket, db: Session = Depends(get_db)):
+    """
+    Handles WebSocket connections and streams real-time data.
+
+    Args:
+        ws (WebSocket): The WebSocket connection object.
+        db (Session): Database session dependency.
+    """
     await manager.connect(ws)
     try:
-        await ws.send_json({"type":"hello","msg":"connected"})
+        # --- 🔔 NEW: Send an initial data snapshot upon connection 🔔 ---
+        # Retrieve the current state of the order book from the in-memory book.
+        snapshot = book.snapshot()
+
+        # Retrieve the most recent 50 trades from the database.
+        trades = db.query(Trade).order_by(Trade.id.desc()).limit(50).all()
+
+        # Import the Pydantic schema for trades to serialize the data correctly.
+        from .schemas import TradeOut
+
+        # Construct the message containing the full order book and trades.
+        msg = {
+            "type": "snapshot",
+            "orderbook": snapshot,
+            "trades": [TradeOut.model_validate(t).model_dump() for t in trades]
+        }
+
+        # Send the snapshot to the newly connected client.
+        await ws.send_json(msg)
+
+        # Keep the connection open and wait for messages from the client
+        # (though this client won't send any).
         while True:
-            await ws.receive_text()  # keep the socket active; frontend doesn't need to send anything
-    except Exception:
+            await ws.receive_text()
+
+    except WebSocketDisconnect:
+        # Handle client disconnection gracefully.
+        print("WebSocket disconnected.")
+    except Exception as e:
+        # Handle other potential errors.
+        print(f"An error occurred: {e}")
+    finally:
+        # Ensure the client is removed from the active connections list.
         manager.disconnect(ws)
+
 
 # -------- MATCHING ENGINE ----------
 # def _match_orders(db: Session):
