@@ -135,12 +135,24 @@ def register(payload: UserCreate, db: Session = Depends(get_db)):
     db.refresh(user)
     return user
 
-@app.post("/auth/login", response_model=Token)
+# @app.post("/auth/login", response_model=Token)
+# def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+#     user = db.query(User).filter(User.username == form_data.username).first()
+#     if not user or not verify_password(form_data.password, user.password_hash):
+#         raise HTTPException(401, "Invalid username or password")
+#     token = create_access_token({"sub": user.username})
+#     return {"access_token": token, "token_type": "bearer"}
+
+@app.post("/auth/login", response_model=Token, tags=["auth"])
 def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     user = db.query(User).filter(User.username == form_data.username).first()
     if not user or not verify_password(form_data.password, user.password_hash):
-        raise HTTPException(401, "Invalid username or password")
-    token = create_access_token({"sub": user.username})
+        raise HTTPException(status_code=401, detail="Invalid username or password")
+
+    # Corrected line: Include the user's role in the JWT payload
+    payload = {"sub": user.username, "role": user.role}
+    token = create_access_token(payload)
+
     return {"access_token": token, "token_type": "bearer"}
 
 @app.get("/auth/me", response_model=UserOut)
